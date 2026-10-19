@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="description" content="Caja POS: ventas, caja, inventario, finanzas y empleados.">
+  <meta name="theme-color" content="#0F1B3D">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Caja POS">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+  <link rel="icon" type="image/png" href="favicon.png">
+  <link rel="manifest" href="manifest.json">
+  <title>Caja POS</title>
+  <style>
+    :root { --bg: #F5F7FB; --ink: #0F172A; --muted: #64748B; --brand: #2357E8; --ring: #DCE6FF; }
+    html, body { margin: 0; height: 100%; background: var(--bg); overflow: hidden; }
+    #splash { position: fixed; inset: 0; display: flex; flex-direction: column; align-items: center;
+      justify-content: center; gap: 18px; font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+      color: var(--ink); background: var(--bg); transition: opacity .35s ease; z-index: 10; }
+    #splash img { width: 72px; height: 72px; border-radius: 20px; box-shadow: 0 12px 28px rgba(35,87,232,.28); }
+    #splash .t { font-weight: 800; font-size: 20px; letter-spacing: -.3px; }
+    #splash .s { color: var(--muted); font-size: 14px; text-align: center; padding: 0 24px; }
+    .bar { width: 160px; height: 4px; border-radius: 4px; background: var(--ring); overflow: hidden; }
+    .bar i { display: block; width: 40%; height: 100%; background: var(--brand); border-radius: 4px;
+      animation: slide 1.1s ease-in-out infinite; }
+    @keyframes slide { 0% { transform: translateX(-100%); } 100% { transform: translateX(260%); } }
+    @media (prefers-reduced-motion: reduce) { .bar i { animation: none; width: 100%; } }
+    #splash.hide { opacity: 0; pointer-events: none; }
+  </style>
+</head>
+<body>
+  <div id="splash">
+    <img src="icons/Icon-192.png" alt="">
+    <div class="t">Caja POS</div>
+    <div class="bar"><i></i></div>
+    <div class="s" id="msg">Cargando la caja…</div>
+  </div>
+  <script>
+    window.addEventListener('flutter-first-frame', function () {
+      var s = document.getElementById('splash');
+      s.classList.add('hide');
+      setTimeout(function () { s.remove(); }, 400);
+    });
+    // Pide al navegador que no borre los datos de la caja.
+    try { navigator.storage && navigator.storage.persist && navigator.storage.persist(); } catch (e) {}
+    // Modo sin conexión: guarda la app en el teléfono para abrirla sin internet.
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('sw.js').catch(function () {});
+    }
+    setTimeout(function () {
+      var m = document.getElementById('msg');
+      if (m) m.textContent = 'La primera vez tarda un poco más mientras se guarda en tu teléfono…';
+    }, 6000);
+  </script>
+  <script src="flutter_bootstrap.js" async></script>
+</body>
+</html>
