@@ -1,7 +1,7 @@
 // Modo sin conexión de Caja POS.
 // Al instalar guarda todos los archivos de la app; después la abre desde el
 // teléfono aunque no haya internet. Cada versión nueva usa su propia caché.
-const VERSION = '6';
+const VERSION = '12';
 const CACHE = 'caja-pos-' + VERSION;
 const FILES = [
  "./",
